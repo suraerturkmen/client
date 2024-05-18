@@ -1,0 +1,11 @@
+export const linear_background = "#F0F2F5";
+export const linear_grey = "#7B809A";
+export const linear_dark_blue = "#344767";
+export const linear_orange = "#EFA13F";
+export const linear_shadow_red = "rgba(220, 34, 101, 0.36)";
+export const linear_dark_black = "#191919";
+export const linear_light_grey = "#A8B8D8";
+export const drop_shadow_green = "0px 2px 6px rgba(79, 169, 83, 0.36)";
+export const linear_white = "#FFFFFF";
+export const drop_shadow_black = "0px 2px 6px rgba(0, 0, 0, 0.25)";
+export const linear_light_green = "#BCE1BE";
