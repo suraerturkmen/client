@@ -1,26 +1,52 @@
 import React, { useEffect, useState } from "react";
 import * as S from "@/index.styles";
-import {
-  Gauge,
-  GaugeReferenceArc,
-  GaugeValueArc,
-  gaugeClasses,
-} from "@mui/x-charts/Gauge";
-import * as colors from "@/constant/colors";
+import { Typography } from "@mui/material";
 
 function Index() {
-  const [data, setData] = useState([
-    { temperature: 0, humidity: 0, lightness: 0 },
-  ]);
+  const [data, setData] = useState({
+    isWater: null,
+    humidity: null,
+    temperature: null
+  });
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/home")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setData(data.messages);
-      });
+    const fetchData = () => {
+      fetch("http://localhost:8080/api/mqtt_messages")
+        .then((res) => res.json())
+        .then((responseData) => {
+          const parsedMessages = responseData.messages.map((message: string) => JSON.parse(message));
+          setData(parsedMessages[0]);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    };
+
+    fetchData();
+
+    const intervalId = setInterval(fetchData, 2000);
+
+    return () => clearInterval(intervalId);
   }, []);
+
+
+  const handleGiveWater = () => {
+    fetch("http://localhost:8080/api/giveWater", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message: "Water the plant" })
+    })
+      .then((res) => res.json())
+      .then((responseData) => {
+        console.log("Response from server:", responseData);
+      })
+      .catch((error) => {
+        console.error("Error giving water:", error);
+      });
+  };
+
 
   return (
     <S.StyledContainer>
@@ -28,23 +54,28 @@ function Index() {
       <S.StyledCardContainer>
         <S.StyledCard>
           <S.StyledPercentageTemperature>
-            {data[0].temperature + "°C"}
+            {data.temperature !== null ? data.temperature + "°C" : "Loading..."}
           </S.StyledPercentageTemperature>
-          <S.StyledText>Sıcaklık</S.StyledText>
+          <S.StyledText>Temperature</S.StyledText>
         </S.StyledCard>
         <S.StyledCard>
           <S.StyledPercentageHumiditiy>
-            {data[0].humidity}
+            {data.humidity !== null ? data.humidity + "%" : "Loading..."}
           </S.StyledPercentageHumiditiy>
           <S.StyledText>Humidity</S.StyledText>
         </S.StyledCard>
         <S.StyledCard>
           <S.StyledPercentageLigthness>
-            {data[0].lightness}
+            {data.isWater !== null ? (data.isWater ? "Water Detected" : "No Water Detected") : "Loading..."}
           </S.StyledPercentageLigthness>
-          <S.StyledText>Lightness</S.StyledText>
+          <S.StyledText>Water</S.StyledText>
         </S.StyledCard>
       </S.StyledCardContainer>
+      <S.StyledButton onClick={handleGiveWater}>
+        <Typography color="Highlight" variant="h6">
+          Give water to plant
+        </Typography>
+      </S.StyledButton>
     </S.StyledContainer>
   );
 }

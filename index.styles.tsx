@@ -1,6 +1,6 @@
 import { styled } from "@mui/material/styles";
 import * as colors from "@/constant/colors";
-import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
+import { Button } from "@mui/material";
 
 export const StyledContainer = styled("div")({
   display: "flex",
@@ -54,9 +54,9 @@ export const StyledGaugeCard = styled("div")({
 export const StyledPercentageLigthness = styled("div")({
   fontFamily: "Roboto Slab",
   fontStyle: "normal",
-  fontWeight: 700,
-  fontSize: "64px",
-  lineHeight: "140%",
+  fontWeight: 500,
+  fontSize: "40px",
+  lineHeight: "100%",
   color: colors.linear_light_grey,
   textAlign: "center",
 });
@@ -90,3 +90,11 @@ export const StyledText = styled("div")({
   color: colors.linear_grey,
   textAlign: "center",
 });
+
+export const StyledButton = styled(Button)({
+  background: colors.linear_shadow_red,
+  padding: "10px 20px",
+  ":hover": {
+    background: colors.linear_orange,
+  }
+})
